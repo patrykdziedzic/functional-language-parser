@@ -1,0 +1,1 @@
+docker exec -it parsing-dev-tools /aug-compiler/out/aug-compiler.o
