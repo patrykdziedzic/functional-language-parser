@@ -1,5 +1,5 @@
-
 makeCommand="make"
+
 if [ $# -eq 1 ]; then
     makeCommand="$makeCommand $1"
 fi

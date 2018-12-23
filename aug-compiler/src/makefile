@@ -1,9 +1,12 @@
 CC=gcc
 CFLAGS=-lstdc++
 
-aug-compiler:
-	$(CC) -o ./../out/aug-compiler.o ./main.cpp $(CFLAGS)
+main.cpp:
+	flex -o ./main.cpp ./main.l
+
+build: main.cpp
+	$(CC) -o ./../out/parser.o ./main.cpp $(CFLAGS)
 
 .PHONY: clean
 clean:
-	rm -f ./../out/*.o
+	rm -f ./../out/*.o && rm -f ./main.cpp

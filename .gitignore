@@ -1,2 +1,3 @@
-out/*
+aug-compiler/out/*
 .DS_Store
+aug-compiler/src/main.cpp
