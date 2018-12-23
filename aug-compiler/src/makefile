@@ -1,5 +1,5 @@
-CC=gcc
-CFLAGS=-lstdc++
+CC=g++
+CFLAGS=-std=c++11 -g -Wall -pedantic
 
 main.cpp:
 	flex -o ./main.cpp ./main.l
