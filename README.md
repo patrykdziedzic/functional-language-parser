@@ -27,7 +27,7 @@ Where **filepath** references to file which would be processed. Notice, that the
 
 The sources come with a test file to process. To invoke the application with the test file, run the following script:
 ```sh
-Start-Application.sh /aug-compiler/test/chars-count.txt
+Start-Application.sh /aug-compiler/test/data/chars-count.txt
 ```
 
 The application output should be:
