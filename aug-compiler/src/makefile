@@ -1,18 +1,27 @@
 CC=g++
 CFLAGS=-std=c++11 -g -Wall -pedantic
+OUT_DIR=./../out ./../out/test
 
 main.cpp:
 	flex -o ./main.cpp ./main.l
 
-build: main.cpp
+.PHONY: test-output-dir output-dir
+
+output-dir:
+	mkdir -p ./../out
+
+test-output-dir:
+	mkdir -p ./../out/test
+
+build: main.cpp output-dir
 	$(CC) -o ./../out/parser.o ./main.cpp $(CFLAGS)
 
-test-build:
-	$(CC) -o ./../out/test/test.o ./../test/test.cpp
+test-build: test-output-dir
+	$(CC) -o ./../out/test/test.o ./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/test.cpp $(CFLAGS)
 
 test-run: test-build
 	./../out/test/test.o
 
 .PHONY: clean
 clean:
-	rm -f ./../out/*.o && rm -f ./main.cpp
+	rm -f -r ./../out/* && rm -f ./main.cpp
