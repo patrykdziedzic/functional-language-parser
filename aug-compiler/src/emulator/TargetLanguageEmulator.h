@@ -7,7 +7,9 @@
 namespace TargetLanguage{
     class Emulator{
         public:
-            std::stack<NUMERIC> memoryStack;
+            std::stack<NUMERIC>* memoryStack;
+            Emulator();
+            ~Emulator();
     };
 }
 

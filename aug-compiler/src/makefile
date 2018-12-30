@@ -17,7 +17,7 @@ build: main.cpp output-dir
 	$(CC) -o ./../out/parser.o ./main.cpp $(CFLAGS)
 
 test-build: test-output-dir
-	$(CC) -o ./../out/test/test.o ./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/test.cpp $(CFLAGS)
+	$(CC) -o ./../out/test/test.o ./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./emulator/TargetLanguageEmulator.cpp ./../test/test.cpp $(CFLAGS)
 
 test-run: test-build
 	./../out/test/test.o
