@@ -8,6 +8,8 @@ class TargetLanguageEmulatorTest: public TestFixture{
         TargetLanguageEmulatorTest();
         virtual void Run();
         virtual ~TargetLanguageEmulatorTest();
+    private:
+        void TestIfCreatesObjectProperely();
 };
 
 #endif
