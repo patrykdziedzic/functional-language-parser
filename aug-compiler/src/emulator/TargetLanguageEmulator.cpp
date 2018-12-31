@@ -1,13 +1,14 @@
 #include "TargetLanguageEmulator.h"
-#include <stack>
 
 namespace TargetLanguage{
     Emulator::Emulator(){
-        this->memoryStack = new std::stack<NUMERIC>();
+        memoryStack = new std::stack<NUMERIC>();
+        programMemory = new std::vector<std::string>();
     }
 
     Emulator::~Emulator(){
-        delete this->memoryStack;
+        delete memoryStack;
+        delete programMemory;
     }
 }
 

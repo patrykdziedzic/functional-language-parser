@@ -3,6 +3,8 @@
 
 #define NUMERIC signed long long
 #include <stack>
+#include <vector>
+#include <string>
 
 namespace TargetLanguage{
     class Emulator{
@@ -10,6 +12,8 @@ namespace TargetLanguage{
             std::stack<NUMERIC>* memoryStack;
             Emulator();
             ~Emulator();
+        private:
+            std::vector<std::string>* programMemory;
     };
 }
 
