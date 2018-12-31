@@ -24,14 +24,14 @@ namespace TargetLanguage{
         std::vector<char> charsCollection;
         char* buffer = new char[BufferSize];
 
-        while(programStream->read(buffer, BufferSize)){
+        while(programStream->read(buffer, BufferSize))
             InsertBufferContentToVector(programStream, &charsCollection, buffer);
-        }
 
         InsertBufferContentToVector(programStream, &charsCollection, buffer);
         delete buffer;
         programLength = charsCollection.size();
-        program = new char[programLength];
+        charsCollection.push_back('\0');
+        program = new char[programLength + 1];
         std::copy(charsCollection.begin(), charsCollection.end(), program);
     }
 
