@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "ProgramMemoryTest.h"
 
 void ProgramMemoryTest::Run(){
@@ -12,6 +13,8 @@ void ProgramMemoryTest::Run(){
     TestIfLinesCountIsCorrectForOneLine();
     TestIfLinesMappingIsCorrectForOneLine();
     TestIfLinesMappingIsCorrectForTwoLines();
+    TestProgramSizeForBigProgramFile();
+    TestLinesCountForBigProgramFile();
     cout << "Program memory test finish" << endl;
 }
 
@@ -76,8 +79,35 @@ ProgramMemory* ProgramMemoryTest::CreateProgramMemory(string input){
     return new ProgramMemory(&iss);
 }
 
-ProgramMemoryTest::ProgramMemoryTest(){
+void ProgramMemoryTest::TestProgramSizeForBigProgramFile(){
+    cout << "Test calculating program size for a big program file" << endl;
+    function<void(ProgramMemory*)> testFunction = [&](ProgramMemory* programMemory){
+        AssertIsTrue(programMemory->GetProgramLength() == 5009);
+    };
 
+    TestWithProgramFile("./../test/data/program-memory-test1.txt", testFunction);
+}
+
+void ProgramMemoryTest::TestLinesCountForBigProgramFile(){
+    cout << "Test calculating lines count for a big program file" << endl;
+    function<void(ProgramMemory*)> testFunction = [&](ProgramMemory* programMemory){
+        AssertIsTrue(programMemory->GetLinesCount() == 9);
+    };
+
+    TestWithProgramFile("./../test/data/program-memory-test1.txt", testFunction);
+}
+
+void ProgramMemoryTest::TestWithProgramFile(string programFilePath, function<void(ProgramMemory*)> test){
+    ifstream testFile;
+    testFile.open(programFilePath);
+    ProgramMemory* programMemory = new ProgramMemory(&testFile);
+    test(programMemory);
+    testFile.close();
+    delete programMemory;
+}
+
+ProgramMemoryTest::ProgramMemoryTest(){
+    
 }
 
 ProgramMemoryTest::~ProgramMemoryTest(){

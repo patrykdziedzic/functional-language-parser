@@ -1,5 +1,6 @@
 #include "ProgramMemory.h"
 #include <algorithm>
+#include <iostream>
 
 namespace TargetLanguage{
     ProgramMemory::ProgramMemory(std::istream* programStream){
@@ -40,8 +41,7 @@ namespace TargetLanguage{
     }
 
     void ProgramMemory::InsertBufferContentToVector(std::istream* stream, std::vector<char>* output, char* buffer){
-        int readCharsCount = stream->gcount() - output->size();
-        output->insert(output->end(), buffer, buffer + readCharsCount);
+        output->insert(output->end(), buffer, buffer + stream->gcount());
     }
 
     char* ProgramMemory::GetPosition(unsigned long lineIndex){
