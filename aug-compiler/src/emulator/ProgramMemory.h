@@ -21,6 +21,7 @@ namespace TargetLanguage{
             std::map<unsigned long, unsigned long>* linesPositionMapping;
             void ReadLinesPositionMapping();
             void ReadProgramFromStream(std::istream* programStream);
+            void ReadStreamToCharsVector(std::istream* programStream, std::vector<char>* output);
             void InsertBufferContentToVector(std::istream* stream, std::vector<char>* output, char* buffer);
             static const unsigned BufferSize = 4096;
     };

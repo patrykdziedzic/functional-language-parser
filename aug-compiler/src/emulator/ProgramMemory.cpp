@@ -22,17 +22,21 @@ namespace TargetLanguage{
 
     void ProgramMemory::ReadProgramFromStream(std::istream* programStream){
         std::vector<char> charsCollection;
-        char* buffer = new char[BufferSize];
-
-        while(programStream->read(buffer, BufferSize))
-            InsertBufferContentToVector(programStream, &charsCollection, buffer);
-
-        InsertBufferContentToVector(programStream, &charsCollection, buffer);
-        delete buffer;
+        ReadStreamToCharsVector(programStream, &charsCollection);
         programLength = charsCollection.size();
         charsCollection.push_back('\0');
         program = new char[programLength + 1];
         std::copy(charsCollection.begin(), charsCollection.end(), program);
+    }
+
+    void ProgramMemory::ReadStreamToCharsVector(std::istream* programStream, std::vector<char>* output){
+        char* buffer = new char[BufferSize];
+
+        while(programStream->read(buffer, BufferSize))
+            InsertBufferContentToVector(programStream, output, buffer);
+
+        InsertBufferContentToVector(programStream, output, buffer);
+        delete buffer;
     }
 
     void ProgramMemory::InsertBufferContentToVector(std::istream* stream, std::vector<char>* output, char* buffer){
