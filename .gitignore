@@ -1,3 +1,6 @@
 aug-compiler/out/*
 .DS_Store
 aug-compiler/src/main.cpp
+aug-compiler/src/emulator/TargetLanguageEmulatorLexer.cpp
+aug-compiler/src/emulator/TargetLanguageEmulatorParser.cpp
+aug-compiler/src/emulator/TargetLanguageEmulatorParser.h

@@ -22,6 +22,18 @@ test-build: test-output-dir
 test-run: test-build
 	./../out/test/test.o
 
+parser-compile:
+	bison -o ./emulator/TargetLanguageEmulatorParser.cpp --defines=./emulator/TargetLanguageEmulatorParser.h ./emulator/TargetLanguageEmulatorParser.y
+
+lexer-compile:
+	flex -o ./emulator/TargetLanguageEmulatorLexer.cpp ./emulator/TargetLanguageEmulatorLexer.l
+
+build-parser-test: parser-compile lexer-compile
+	$(CC) -o ./../out/test/parser-test.o ./emulator/TargetLanguageEmulatorLexer.cpp ./emulator/TargetLanguageEmulatorParser.cpp $(CFLAGS)
+
+run-parser-test: build-parser-test
+	./../out/test/parser-test.o
+
 .PHONY: clean
 clean:
 	rm -f -r ./../out/* && rm -f ./main.cpp
