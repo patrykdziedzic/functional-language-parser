@@ -4,7 +4,6 @@
 %{
     #include <string>
     #include "TargetLanguageEmulatorParser.h"
-    #include <iostream>
     using namespace std;
 %}
 
@@ -29,6 +28,7 @@ READ    { return READ; }
 PRINT   { return PRINT; }
 STOP    { return STOP; }
 NOP { return NOP; }
+,   { return DELIMITER; }
 [0-9]+  {
     TargetLanguageEmulatorlval.unsignedValue = stoi(yytext);
     return UNSIGNED;

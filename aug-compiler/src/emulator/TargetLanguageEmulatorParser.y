@@ -1,18 +1,58 @@
 %define api.prefix {TargetLanguageEmulator}
 
-%{
+%code requires{
     #include <iostream>
+    #include <vector>
+
+    void TargetLanguageEmulatorerror(const char *s);
+}
+
+%code{
+    extern int TargetLanguageEmulatorlex();
+    extern int* TargetLanguageEmulator_scan_string(const char *str_input);
+    extern int TargetLanguageEmulatorparse();
     using namespace std;
 
-    extern int TargetLanguageEmulatorlex();
-    extern int TargetLanguageEmulatorparse();
-    extern int TargetLanguageEmulator_scan_string(const char *str_input);
-    void TargetLanguageEmulatorerror(const char *s);
-%}
+    int main(int, char**) {
+        const char *input =
+            "DATA 3, 8, 92"
+            "PUSH 5"
+            "PUSH $5"
+            "PUSH $7"
+            "POP"
+            "DUP"
+            "POP $10"
+            "ADD"
+            "MUL"
+            "DIV"
+            "NEG"
+            "JZ $6"
+            "JNZ $124"
+            "JLZ $768"
+            "JLEZ $231"
+            "JGZ $23"
+            "JGEZ $125"
+            "READ"
+            "PRINT"
+            "NOP"
+            "STOP"
+            "JUMP $3";
+        cout << "Start parsing" << endl;
+        TargetLanguageEmulator_scan_string(input);
+        TargetLanguageEmulatorparse();
+        return 0;
+    }
+
+    void TargetLanguageEmulatorerror(const char *s) {
+        cout << "Target language emulator parser error!" << endl << "Message: " << s << endl;
+        exit(-1);
+    }
+}
 
 %union{
     long long unsigned unsignedValue;
     long long signed signedValue;
+    std::vector<long long signed> *signedVector;
 }
 
 %token DATA
@@ -35,11 +75,13 @@
 %token PRINT
 %token STOP
 %token NOP
+%token DELIMITER
 %token<unsignedValue> UNSIGNED
 %token<signedValue> SIGNED
 
 %type<unsignedValue> ADDRESS
 %type<signedValue> VALUE
+%type<signedVector> VECTOR
 
 %%
 TargetLanguage:
@@ -111,8 +153,15 @@ Instruction:
     }
 ;
 DataLine:
-    DATA {
-        cout << "DATA token found" << endl;
+    DATA VECTOR{
+        cout << "DATA token found with" << endl;
+        for(auto const& value: *$2) {
+            cout << value << endl;
+        }
+        delete $2;
+    }
+    | DATA{
+        cout << "DATA token found without parameters" << endl;
     }
 ;
 ADDRESS:
@@ -121,39 +170,12 @@ ADDRESS:
 VALUE:
     SIGNED | UNSIGNED
 ;
+VECTOR:
+    VALUE{
+        $$ = new vector<long long signed>();
+        $$->push_back($1);
+    }
+    | VECTOR DELIMITER VALUE{
+        $$->push_back($3);
+    }
 %%
-
-int main(int, char**) {
-    const char *input =
-        "DATA"
-        "PUSH 5"
-        "PUSH $5"
-        "PUSH $7"
-        "POP"
-        "DUP"
-        "POP $10"
-        "ADD"
-        "MUL"
-        "DIV"
-        "NEG"
-        "JZ $6"
-        "JNZ $124"
-        "JLZ $768"
-        "JLEZ $231"
-        "JGZ $23"
-        "JGEZ $125"
-        "READ"
-        "PRINT"
-        "NOP"
-        "STOP"
-        "JUMP $3";
-    cout << "Start parsing" << endl;
-    TargetLanguageEmulator_scan_string(input);
-    TargetLanguageEmulatorparse();
-    return 0;
-}
-
-void TargetLanguageEmulatorerror(const char *s) {
-  cout << "Target language emulator parser error!" << endl << "Message: " << s << endl;
-  exit(-1);
-}
