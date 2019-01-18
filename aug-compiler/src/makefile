@@ -1,6 +1,8 @@
 CC=g++
 CFLAGS=-std=c++11 -g -Wall -pedantic
 OUT_DIR=./../out ./../out/test
+TEST_FIXTURES=./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/emulator/ProgramMemoryTest.cpp ./../test/emulator/TargetLanguageEngineTest.cpp
+CLASSES_TO_TEST=./emulator/TargetLanguageEmulator.cpp ./emulator/ProgramMemory.cpp ./emulator/TargetLanguageEngine.cpp ./../test/test.cpp
 
 main.cpp:
 	flex -o ./main.cpp ./main.l
@@ -17,7 +19,7 @@ build: main.cpp output-dir
 	$(CC) -o ./../out/parser.o ./main.cpp $(CFLAGS)
 
 test-build: test-output-dir
-	$(CC) -o ./../out/test/test.o ./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/emulator/ProgramMemoryTest.cpp ./emulator/TargetLanguageEmulator.cpp ./emulator/ProgramMemory.cpp ./../test/test.cpp $(CFLAGS)
+	$(CC) -o ./../out/test/test.o  $(TEST_FIXTURES) $(CLASSES_TO_TEST) $(CFLAGS)
 
 test-run: test-build
 	./../out/test/test.o
