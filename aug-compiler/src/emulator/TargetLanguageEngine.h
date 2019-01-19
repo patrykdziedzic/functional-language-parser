@@ -5,12 +5,19 @@
 #include <stack>
 #include <vector>
 #include <string>
+#include <istream>
+#include <ostream>
+
+class TargetLanguageEngineTest;
 
 namespace TargetLanguage{
     class Engine{
         public:
+            friend TargetLanguageEngineTest;
             Engine();
-            Engine(std::vector<NUMERIC>);
+            Engine(std::istream* input, std::ostream* output);
+            Engine(std::vector<NUMERIC>* initialMemory);
+            Engine(std::vector<NUMERIC>* initialMemory, std::istream* input, std::ostream* output);
             void PushFromAddress(NUMERIC address);
             void PushValue(NUMERIC value);
             void PopToAddress(NUMERIC address);
@@ -20,12 +27,14 @@ namespace TargetLanguage{
             void Negate();
             void Mulitply();
             void Divide();
-            void ReadFromStandardInput();
-            void PrintToStandardOutput();
+            void Read();
+            void Print();
             ~Engine();
         private:
             std::vector<NUMERIC>* operationalMemory;
             std::stack<NUMERIC>* memoryStack;
+            std::istream* input;
+            std::ostream* output;
     };
 }
 
