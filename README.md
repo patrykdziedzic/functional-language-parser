@@ -1,8 +1,7 @@
-# Flex characters counter
+# Functional language to assembly parser
 
-This is a university assignment which puprose is to create a simple compilator by using flex and bison.
-
-In this step the application is a flex equivalent of 'Hello world' - it counts a number of characters and lines in an input file.
+This is a university assignment which puprose is to create a simple parser by using flex and bison.
+The input language is a simple functional language. The output is assmebly-like language which uses a memory stack.
 
 ## Deployment
 
