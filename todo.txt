@@ -1,6 +1,0 @@
-TODO:
-1. What is FLEX
-    Flex scans a given input and tokenizes it with a given instruction. It recognises token type, and executes assigned action.
-2. Make a simple makefile for work
-3. Write words calculator
-    
