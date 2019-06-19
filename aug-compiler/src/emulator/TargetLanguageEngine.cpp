@@ -13,7 +13,7 @@ namespace TargetLanguage{
     Engine::Engine(std::vector<NUMERIC>* initialMemory, istream* input, ostream* output){
         this->input = input;
         this->output = output;
-        this->operationalMemory = initialMemory;
+        CopyAsInitialMemory(initialMemory);
         this->memoryStack = new stack<NUMERIC>();
     }
 
@@ -51,7 +51,7 @@ namespace TargetLanguage{
         PushValue(-arg);
     }
 
-    void Engine::Mulitply(){
+    void Engine::Multiply(){
         NUMERIC arg1 = Pop();
         NUMERIC arg2 = Pop();
         PushValue(arg1 * arg2);
@@ -73,7 +73,14 @@ namespace TargetLanguage{
         *output << Pop() << endl;
     }
     
+    void Engine::CopyAsInitialMemory(std::vector<NUMERIC>* initialMemory){
+        this->operationalMemory = nullptr;
+        if(initialMemory != nullptr)
+            this->operationalMemory = new std::vector<NUMERIC>(*initialMemory);
+    }
+
     Engine::~Engine(){
         delete this->memoryStack;
+        delete this->operationalMemory;
     }
 }

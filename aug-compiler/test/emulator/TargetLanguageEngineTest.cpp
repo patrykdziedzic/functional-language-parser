@@ -1,12 +1,12 @@
-#include <iostream>
 #include "TargetLanguageEngineTest.h"
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 using namespace TargetLanguage;
 
 void TargetLanguageEngineTest::Run(){
-    cout << "Target language engine test start" << endl;
+    logger->LogInfoMessage("Target language engine test start");
     TestIfCreatesObjectProperely();
     TestIfPushesToStack();
     TestIfPopsFromStackProperValue();
@@ -30,17 +30,17 @@ void TargetLanguageEngineTest::Run(){
     TestIfAddressValueRemainsSameAfterPushing();
     TestIfPopsProperValueToAddress();
     TestIfStackReducesAfterPoppingToAddress();
-    cout << "Target language engine test finish" << endl;
+    logger->LogInfoMessage("Target language engine test finish");
 }
 
 void TargetLanguageEngineTest::TestIfCreatesObjectProperely(){
-    cout << "Test if engine is created successfuly" << endl;
+    logger->LogInfoMessage("Test if engine is created successfuly");
     TargetLanguage::Engine* engine = new TargetLanguage::Engine();
     delete engine;
 }
 
 void TargetLanguageEngineTest::TestIfPushesToStack(){
-    cout << "Test if engine pushes to stack properely" << endl;
+    logger->LogInfoMessage("Test if engine pushes to stack properely");
     TargetLanguage::Engine* engine = new TargetLanguage::Engine();
     engine->PushValue(1);
     AssertIsTrue(engine->memoryStack->top() == 1);
@@ -48,7 +48,7 @@ void TargetLanguageEngineTest::TestIfPushesToStack(){
 }
 
 void TargetLanguageEngineTest::TestIfPopsFromStackProperValue(){
-    cout << "Test if engine pops proper value from stack" << endl;
+    logger->LogInfoMessage("Test if engine pops proper value from stack");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         AssertIsTrue(engine->Pop() == 1);
     };
@@ -56,7 +56,7 @@ void TargetLanguageEngineTest::TestIfPopsFromStackProperValue(){
 }
 
 void TargetLanguageEngineTest::TestIfStackReducesElementsAfterPop(){
-    cout << "Test if engine reduces stack after pop" << endl;
+    logger->LogInfoMessage("Test if engine reduces stack after pop");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Pop();
         engine->Pop();
@@ -66,7 +66,7 @@ void TargetLanguageEngineTest::TestIfStackReducesElementsAfterPop(){
 }
 
 void TargetLanguageEngineTest::TestIfStackDuplicatesTopValue(){
-    cout << "Test if stack duplicates top value" << endl;
+    logger->LogInfoMessage("Test if stack duplicates top value");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Duplicate();
         AssertIsTrue(engine->memoryStack->top() == 3);
@@ -79,7 +79,7 @@ void TargetLanguageEngineTest::TestIfStackDuplicatesTopValue(){
 }
 
 void TargetLanguageEngineTest::TestIfReadsValue(){
-    cout << "Test a value is read from input stream to memory stack" << endl;
+    logger->LogInfoMessage("Test a value is read from input stream to memory stack");
     istringstream inputStream("10\n");
     TargetLanguage::Engine* engine = new TargetLanguage::Engine(&inputStream, &cout);
     engine->Read();
@@ -88,7 +88,7 @@ void TargetLanguageEngineTest::TestIfReadsValue(){
 }
 
 void TargetLanguageEngineTest::TestIfReadsManyValues(){
-    cout << "Test if many values are read from input stream to memory stack" << endl;
+    logger->LogInfoMessage("Test if many values are read from input stream to memory stack");
     istringstream inputStream("10\n5\n3\n");
     TargetLanguage::Engine* engine = new TargetLanguage::Engine(&inputStream, &cout);
     engine->Read();
@@ -103,7 +103,7 @@ void TargetLanguageEngineTest::TestIfReadsManyValues(){
 }
 
 void TargetLanguageEngineTest::TestIfPrintsValue(){
-    cout << "Test if value is printed from memory stack to output stream" << endl;
+    logger->LogInfoMessage("Test if value is printed from memory stack to output stream");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         ostringstream outputStream;
         engine->output = &outputStream;
@@ -114,7 +114,7 @@ void TargetLanguageEngineTest::TestIfPrintsValue(){
 }
 
 void TargetLanguageEngineTest::TestIfPrintingPopsValueFromStack(){
-    cout << "Test if printing pops a value from the stack" << endl;
+    logger->LogInfoMessage("Test if printing pops a value from the stack");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         ostringstream outputStream;
         engine->output = &outputStream;
@@ -126,7 +126,7 @@ void TargetLanguageEngineTest::TestIfPrintingPopsValueFromStack(){
 }
 
 void TargetLanguageEngineTest::TestIfPrintsManyValues(){
-    cout << "Test if prints many values" << endl;
+    logger->LogInfoMessage("Test if prints many values");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         ostringstream outputStream;
         engine->output = &outputStream;
@@ -139,7 +139,7 @@ void TargetLanguageEngineTest::TestIfPrintsManyValues(){
 }
 
 void TargetLanguageEngineTest::TestIfNegatesValue(){
-    cout << "Test if negates value" << endl;
+    logger->LogInfoMessage("Test if negates value");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Negate();
         AssertIsTrue(engine->memoryStack->top() == -5);
@@ -148,7 +148,7 @@ void TargetLanguageEngineTest::TestIfNegatesValue(){
 }
 
 void TargetLanguageEngineTest::TestIfNegationPopsPreviousValue(){
-    cout << "Test if negation pops previous value" << endl;
+    logger->LogInfoMessage("Test if negation pops previous value");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Negate();
         engine->memoryStack->pop();
@@ -158,7 +158,7 @@ void TargetLanguageEngineTest::TestIfNegationPopsPreviousValue(){
 }
 
 void TargetLanguageEngineTest::TestIfAddsValues(){
-    cout << "Test if adds values" << endl;
+    logger->LogInfoMessage("Test if adds values");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Add();
         AssertIsTrue(engine->memoryStack->top() == 13);
@@ -167,7 +167,7 @@ void TargetLanguageEngineTest::TestIfAddsValues(){
 }
 
 void TargetLanguageEngineTest::TestIfAddingPopsArguments(){
-    cout << "Test if adding pops arguments" << endl;
+    logger->LogInfoMessage("Test if adding pops arguments");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Add();
         engine->memoryStack->pop();
@@ -177,18 +177,18 @@ void TargetLanguageEngineTest::TestIfAddingPopsArguments(){
 }
 
 void TargetLanguageEngineTest::TestIfMultipliesValues(){
-    cout << "Test if multiplies values" << endl;
+    logger->LogInfoMessage("Test if multiplies values");
     function<void(Engine*)> testFunction = [&](Engine* engine){
-        engine->Mulitply();
+        engine->Multiply();
         AssertIsTrue(engine->memoryStack->top() == 40);
     };
     TestWithInitialStack({5, 8}, testFunction);
 }
 
 void TargetLanguageEngineTest::TestIfMultiplicationPopsArguments(){
-    cout << "Test if muliplication pops arguments" << endl;
+    logger->LogInfoMessage("Test if muliplication pops arguments");
     function<void(Engine*)> testFunction = [&](Engine* engine){
-        engine->Mulitply();
+        engine->Multiply();
         engine->memoryStack->pop();
         AssertIsTrue(engine->memoryStack->top() == 5);
     };
@@ -196,7 +196,7 @@ void TargetLanguageEngineTest::TestIfMultiplicationPopsArguments(){
 }
 
 void TargetLanguageEngineTest::TestIfDividiesValues(){
-    cout << "Test if dividies values" << endl;
+    logger->LogInfoMessage("Test if dividies values");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Divide();
         AssertIsTrue(engine->memoryStack->top() == 3);
@@ -205,7 +205,7 @@ void TargetLanguageEngineTest::TestIfDividiesValues(){
 }
 
 void TargetLanguageEngineTest::TestIfDividiesToFloorResult(){
-    cout << "Test if division results in floor integer" << endl;
+    logger->LogInfoMessage("Test if division results in floor integer");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Divide();
         AssertIsTrue(engine->memoryStack->top() == 3);
@@ -214,7 +214,7 @@ void TargetLanguageEngineTest::TestIfDividiesToFloorResult(){
 }
 
 void TargetLanguageEngineTest::TestIfDivisionPopsArguments(){
-    cout << "Test if muliplication pops arguments" << endl;
+    logger->LogInfoMessage("Test if muliplication pops arguments");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->Divide();
         engine->memoryStack->pop();
@@ -224,7 +224,7 @@ void TargetLanguageEngineTest::TestIfDivisionPopsArguments(){
 }
 
 void TargetLanguageEngineTest::TestIfPushesProperValueFromAddress(){
-    cout << "Test if pushes proper value from address" << endl;
+    logger->LogInfoMessage("Test if pushes proper value from address");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->PushFromAddress(1);
         AssertIsTrue(engine->memoryStack->top() == 8);
@@ -233,7 +233,7 @@ void TargetLanguageEngineTest::TestIfPushesProperValueFromAddress(){
 }
 
 void TargetLanguageEngineTest::TestIfAddressValueRemainsSameAfterPushing(){
-    cout << "Test if address remains same after pushing" << endl;
+    logger->LogInfoMessage("Test if address remains same after pushing");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->PushFromAddress(1);
         AssertIsTrue(engine->operationalMemory->at(1) == 8);
@@ -242,7 +242,7 @@ void TargetLanguageEngineTest::TestIfAddressValueRemainsSameAfterPushing(){
 }
 
 void TargetLanguageEngineTest::TestIfPopsProperValueToAddress(){
-    cout << "Test if pops proper value to address" << endl;
+    logger->LogInfoMessage("Test if pops proper value to address");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->PushValue(21);
         engine->PopToAddress(2);
@@ -252,7 +252,7 @@ void TargetLanguageEngineTest::TestIfPopsProperValueToAddress(){
 }
 
 void TargetLanguageEngineTest::TestIfStackReducesAfterPoppingToAddress(){
-    cout << "Test if stack reduces after poping to address" << endl;
+    logger->LogInfoMessage("Test if stack reduces after poping to address");
     function<void(Engine*)> testFunction = [&](Engine* engine){
         engine->PushValue(1);
         engine->PushValue(1);
@@ -283,6 +283,6 @@ void TargetLanguageEngineTest::TestWithInitialMemory(
     delete engine;
 }
 
-TargetLanguageEngineTest::TargetLanguageEngineTest() {}
+TargetLanguageEngineTest::TargetLanguageEngineTest(Logger* logger) : TestFixture(logger) {}
 
 TargetLanguageEngineTest::~TargetLanguageEngineTest() {}

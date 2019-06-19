@@ -5,7 +5,7 @@
 
 class TargetLanguageEmulatorTest: public TestFixture{
     public:
-        TargetLanguageEmulatorTest();
+        TargetLanguageEmulatorTest(Logger* logger);
         virtual void Run();
         virtual ~TargetLanguageEmulatorTest();
     private:

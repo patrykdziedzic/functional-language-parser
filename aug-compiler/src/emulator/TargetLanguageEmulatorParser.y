@@ -2,9 +2,18 @@
 
 %code requires{
     #include <iostream>
-    #include <vector>
+    #include "ProgramMemory.h"
+    #include "ITargetLanguageEngine.h"
 
-    void TargetLanguageEmulatorerror(const char *s);
+    namespace TargetLanguage{
+        void TargetLanguageEmulatorerror(const char *s);
+        class EmulatorParser{
+            public:
+                EmulatorParser(IEngine* engine);
+                void ParseLanguage(ProgramMemory* programMemory);
+                ~EmulatorParser();
+        };
+    }
 }
 
 %code{
@@ -13,34 +22,21 @@
     extern int TargetLanguageEmulatorparse();
     using namespace std;
 
-    int main(int, char**) {
-        const char *input =
-            "DATA 3, 8, 92"
-            "PUSH 5"
-            "PUSH $5"
-            "PUSH $7"
-            "POP"
-            "DUP"
-            "POP $10"
-            "ADD"
-            "MUL"
-            "DIV"
-            "NEG"
-            "JZ $6"
-            "JNZ $124"
-            "JLZ $768"
-            "JLEZ $231"
-            "JGZ $23"
-            "JGEZ $125"
-            "READ"
-            "PRINT"
-            "NOP"
-            "STOP"
-            "JUMP $3";
-        cout << "Start parsing" << endl;
-        TargetLanguageEmulator_scan_string(input);
-        TargetLanguageEmulatorparse();
-        return 0;
+    TargetLanguage::IEngine* emulatorEngine;
+    TargetLanguage::ProgramMemory* targetLanguageCode;
+
+    namespace TargetLanguage{
+        EmulatorParser::EmulatorParser(IEngine* engine){
+            emulatorEngine = engine;
+        }
+
+        void EmulatorParser::ParseLanguage(ProgramMemory* programMemory){
+            targetLanguageCode = programMemory;
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition(0));
+            TargetLanguageEmulatorparse();
+        }
+
+        EmulatorParser::~EmulatorParser() { }
     }
 
     void TargetLanguageEmulatorerror(const char *s) {
@@ -78,91 +74,93 @@
 %token DELIMITER
 %token<unsignedValue> UNSIGNED
 %token<signedValue> SIGNED
+%token<unsignedValue> LINE_ADDRESS
 
 %type<unsignedValue> ADDRESS
 %type<signedValue> VALUE
 %type<signedVector> VECTOR
 
 %%
-TargetLanguage:
-    DataLine
-    | Instruction
-    | TargetLanguage Instruction
+TARGET_LANGUAGE:
+    DATA_LINE
+    | INSTRUCTION_LINE
+    | TARGET_LANGUAGE INSTRUCTION_LINE
 ;
-Instruction:
+INSTRUCTION_LINE:
+    LINE_ADDRESS INSTRUCTION
+;
+INSTRUCTION:
     PUSH ADDRESS {
-        cout << "Push to stack value from address: " << $2 << endl;
+        emulatorEngine->PushFromAddress($2);
     }
     | PUSH VALUE{
-        cout << "Push to stack value: " << $2 << endl;
+        emulatorEngine->PushValue($2);
     }
     | JUMP ADDRESS{
-        cout << "Jump to address: " << $2 << endl;
-        TargetLanguageEmulator_scan_string("PUSH $10");
+        TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | POP ADDRESS{
-        cout << "Pop from stack to address: " << $2 << endl;
+        emulatorEngine->PopToAddress($2);
     }
     | POP{
-        cout << "Pop from stack and drop" << endl;
+        emulatorEngine->Pop();
     }
     | DUP{
-        cout << "Duplicate value on stack" << endl;
+        emulatorEngine->Duplicate();
     }
     | ADD{
-        cout << "Add 2 top values from stack" << endl;
+        emulatorEngine->Add();
     }
     | MUL{
-        cout << "Multiply 2 top values from stack" << endl;
+        emulatorEngine->Multiply();
     }
     | DIV{
-        cout << "Divide 2 top values from stack" << endl;
+        emulatorEngine->Divide();
     }
     | NEG{
-        cout << "Negate value from stack" << endl;
+        emulatorEngine->Negate();
     }
     | JUMP_IF_ZERO ADDRESS{
-        cout << "If value on stack is zero, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() == 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | JUMP_IF_NOT_ZERO ADDRESS{
-        cout << "If value on stack is not zero, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() != 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | JUMP_IF_NEGATIVE ADDRESS{
-        cout << "If value on stack is negative, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() < 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | JUMP_IF_NOT_POSITIVE ADDRESS{
-        cout << "If value on stack is negative or zero, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() <= 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | JUMP_IF_POSITIVE ADDRESS{
-        cout << "If value on stack is positive, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() > 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | JUMP_IF_NOT_NEGATIVE ADDRESS{
-        cout << "If value on stack is positive or zero, go to address: " << $2 << endl;
+        if(emulatorEngine->Pop() >= 0)
+            TargetLanguageEmulator_scan_string(targetLanguageCode->GetPosition($2));
     }
     | READ{
-        cout << "Read value from standard input" << endl;
+        emulatorEngine->Read();
     }
     | PRINT{
-        cout << "Print value to standard input" << endl;
+        emulatorEngine->Print();
     }
     | STOP{
-        cout << "Stop program" << endl;
+        return 0;
     }
-    | NOP{
-        cout << "No action" << endl;
-    }
+    | NOP{ }
 ;
-DataLine:
+DATA_LINE:
     DATA VECTOR{
-        cout << "DATA token found with" << endl;
-        for(auto const& value: *$2) {
-            cout << value << endl;
-        }
+        emulatorEngine->CopyAsInitialMemory($2);
         delete $2;
     }
-    | DATA{
-        cout << "DATA token found without parameters" << endl;
-    }
+    | DATA{ }
 ;
 ADDRESS:
     DOLLAR UNSIGNED { $$ = $2; }

@@ -6,12 +6,11 @@
 #include <string>
 #include <functional>
 
-using namespace std;
 using namespace TargetLanguage;
 
 class ProgramMemoryTest: public TestFixture{
     public:
-        ProgramMemoryTest();
+        ProgramMemoryTest(Logger* logger);
         virtual void Run();
         virtual ~ProgramMemoryTest();
     private:
@@ -23,10 +22,10 @@ class ProgramMemoryTest: public TestFixture{
         void TestIfLinesCountIsCorrectForOneLine();
         void TestIfLinesMappingIsCorrectForOneLine();
         void TestIfLinesMappingIsCorrectForTwoLines();
-        ProgramMemory* CreateProgramMemory(string input);
+        ProgramMemory* CreateProgramMemory(std::string input);
         void TestProgramSizeForBigProgramFile();
         void TestLinesCountForBigProgramFile();
-        void TestWithProgramFile(string programFilePath, std::function<void(ProgramMemory*)> test);
+        void TestWithProgramFile(std::string programFilePath, std::function<void(ProgramMemory*)> test);
 };
 
 #endif

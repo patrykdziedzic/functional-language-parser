@@ -1,8 +1,8 @@
 CC=g++
 CFLAGS=-std=c++11 -g -Wall -pedantic
 OUT_DIR=./../out ./../out/test
-TEST_FIXTURES=./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/emulator/ProgramMemoryTest.cpp ./../test/emulator/TargetLanguageEngineTest.cpp
-CLASSES_TO_TEST=./emulator/TargetLanguageEmulator.cpp ./emulator/ProgramMemory.cpp ./emulator/TargetLanguageEngine.cpp ./../test/test.cpp
+TEST_FIXTURES=./Logger.cpp ./../test/TestFixture.cpp ./../test/emulator/TargetLanguageEmulatorTest.cpp ./../test/emulator/ProgramMemoryTest.cpp ./../test/emulator/TargetLanguageEngineTest.cpp ./../test/emulator/TargetLanguageParserTest.cpp
+CLASSES_TO_TEST=./../test/emulator/mock/TargetLanguageEngineMock.cpp ./emulator/TargetLanguageEmulatorLexer.cpp ./emulator/TargetLanguageEmulatorParser.cpp ./emulator/TargetLanguageEmulator.cpp ./emulator/ProgramMemory.cpp ./emulator/TargetLanguageEngine.cpp ./../test/test.cpp
 
 main.cpp:
 	flex -o ./main.cpp ./main.l
@@ -18,23 +18,17 @@ test-output-dir:
 build: main.cpp output-dir
 	$(CC) -o ./../out/parser.o ./main.cpp $(CFLAGS)
 
-test-build: test-output-dir
+test-build: test-output-dir target-parser-compile target-lexer-compile
 	$(CC) -o ./../out/test/test.o  $(TEST_FIXTURES) $(CLASSES_TO_TEST) $(CFLAGS)
 
 test-run: test-build
 	./../out/test/test.o
 
-parser-compile:
+target-parser-compile:
 	bison -o ./emulator/TargetLanguageEmulatorParser.cpp --defines=./emulator/TargetLanguageEmulatorParser.h ./emulator/TargetLanguageEmulatorParser.y
 
-lexer-compile:
+target-lexer-compile:
 	flex -o ./emulator/TargetLanguageEmulatorLexer.cpp ./emulator/TargetLanguageEmulatorLexer.l
-
-build-parser-test: parser-compile lexer-compile
-	$(CC) -o ./../out/test/parser-test.o ./emulator/TargetLanguageEmulatorLexer.cpp ./emulator/TargetLanguageEmulatorParser.cpp $(CFLAGS)
-
-run-parser-test: build-parser-test
-	./../out/test/parser-test.o
 
 .PHONY: clean
 clean:

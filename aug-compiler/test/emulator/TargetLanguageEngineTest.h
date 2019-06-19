@@ -8,7 +8,7 @@
 
 class TargetLanguageEngineTest: public TestFixture{
     public:
-        TargetLanguageEngineTest();
+        TargetLanguageEngineTest(Logger* logger);
         virtual void Run();
         virtual ~TargetLanguageEngineTest();
     private:

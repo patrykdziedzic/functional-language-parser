@@ -8,8 +8,13 @@
 %}
 
 %%
+#.*$ ; //Comment
 [ \t\n] ;
 DATA    { return DATA; }
+^[0-9]+ {
+    TargetLanguageEmulatorlval.unsignedValue = stoi(yytext);
+    return LINE_ADDRESS;    
+}
 PUSH    { return PUSH; }
 POP { return POP; }
 DUP { return DUP; }
@@ -17,7 +22,7 @@ ADD { return ADD; }
 MUL { return MUL; }
 DIV { return DIV; }
 NEG { return NEG; }
-JUMP { return JUMP; }
+JMP { return JUMP; }
 JZ  { return JUMP_IF_ZERO; }
 JNZ { return JUMP_IF_NOT_ZERO; }
 JLZ { return JUMP_IF_NEGATIVE; }
@@ -33,7 +38,7 @@ NOP { return NOP; }
     TargetLanguageEmulatorlval.unsignedValue = stoi(yytext);
     return UNSIGNED;
 }
--?[0-9] {
+-?[0-9]+ {
     TargetLanguageEmulatorlval.signedValue = stoi(yytext);
     return SIGNED;
 }

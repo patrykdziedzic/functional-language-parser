@@ -1,35 +1,33 @@
 #ifndef TARGETLANGUAGEENGINE_H
 #define TARGETLANGUAGEENGINE_H
 
-#define NUMERIC signed long long
+#include "ITargetLanguageEngine.h"
 #include <stack>
-#include <vector>
 #include <string>
 #include <istream>
 #include <ostream>
 
-class TargetLanguageEngineTest;
-
 namespace TargetLanguage{
-    class Engine{
+    class Engine : public IEngine{
         public:
             friend TargetLanguageEngineTest;
             Engine();
             Engine(std::istream* input, std::ostream* output);
             Engine(std::vector<NUMERIC>* initialMemory);
             Engine(std::vector<NUMERIC>* initialMemory, std::istream* input, std::ostream* output);
-            void PushFromAddress(NUMERIC address);
-            void PushValue(NUMERIC value);
-            void PopToAddress(NUMERIC address);
-            NUMERIC Pop();
-            void Duplicate();
-            void Add();
-            void Negate();
-            void Mulitply();
-            void Divide();
-            void Read();
-            void Print();
-            ~Engine();
+            virtual void PushFromAddress(NUMERIC address);
+            virtual void PushValue(NUMERIC value);
+            virtual void PopToAddress(NUMERIC address);
+            virtual void CopyAsInitialMemory(std::vector<NUMERIC>* initialMemory);
+            virtual NUMERIC Pop();
+            virtual void Duplicate();
+            virtual void Add();
+            virtual void Negate();
+            virtual void Multiply();
+            virtual void Divide();
+            virtual void Read();
+            virtual void Print();
+            virtual ~Engine();
         private:
             std::vector<NUMERIC>* operationalMemory;
             std::stack<NUMERIC>* memoryStack;

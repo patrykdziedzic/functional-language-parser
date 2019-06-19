@@ -1,0 +1,13 @@
+0   PUSH 2
+1   PUSH $1
+2   POP
+3   POP $1
+4   DUP
+5   ADD
+6   MUL
+7   DIV
+8   NEG
+9   READ
+10  PRINT
+11  NOP
+12  STOP

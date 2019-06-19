@@ -1,0 +1,6 @@
+0   JLZ $3
+1   ADD
+2   STOP
+3   JLZ $6
+4   JLZ $6
+5   JLZ $1

@@ -1,0 +1,10 @@
+0   JNZ $5
+1   JNZ $5
+2   JNZ $5
+3   JNZ $5
+4   STOP
+5   JNZ $3
+6   JNZ $3
+7   JNZ $3
+8   JNZ $3
+9   JNZ $3

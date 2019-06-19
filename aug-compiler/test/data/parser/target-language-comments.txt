@@ -1,0 +1,9 @@
+#Initial comment
+DATA 1, 2, 3#read DATA
+0   NOP #iniital line which doesnt do a thing
+#Comment in separate line
+1   JMP $4 #Go to line 4
+2   PUSH 4 #Comment after pushing
+3   STOP #Finish application
+4   POP  #Pop value from stack
+5   JLEZ $2 #Go to line 2 if value from stack is not positive

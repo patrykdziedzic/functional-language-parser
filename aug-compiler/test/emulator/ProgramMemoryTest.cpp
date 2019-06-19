@@ -1,10 +1,11 @@
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include "ProgramMemoryTest.h"
 
+using namespace std;
+
 void ProgramMemoryTest::Run(){
-    cout << "Program memory test start" << endl;
+    logger->LogInfoMessage("Program memory test start");
     TestIfCreatesObjectProperely();
     TestIfCreatesObjectWithEmptyInput();
     TestIfEmptyInputReturnsZeroLength();
@@ -15,62 +16,63 @@ void ProgramMemoryTest::Run(){
     TestIfLinesMappingIsCorrectForTwoLines();
     TestProgramSizeForBigProgramFile();
     TestLinesCountForBigProgramFile();
-    cout << "Program memory test finish" << endl;
+    logger->LogInfoMessage("Program memory test finish");
 }
 
 void ProgramMemoryTest::TestIfCreatesObjectProperely(){
-    cout << "Test if program memory is created successfuly" << endl;
+    logger->LogInfoMessage("Test if program memory is created successfuly");
     ProgramMemory* programMemory = CreateProgramMemory("TEST\n");
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfCreatesObjectWithEmptyInput(){
-    cout << "Test if program memory is created successfuly with empty input" << endl;
+    logger->LogInfoMessage("Test if program memory is created successfuly with empty input");
     ProgramMemory* programMemory = CreateProgramMemory("");
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfEmptyInputReturnsZeroLength(){
-    cout << "Test if program memory created with empty input returns zero length" << endl;
+    logger->LogInfoMessage("Test if program memory created with empty input returns zero length");
     ProgramMemory* programMemory = CreateProgramMemory("");
     AssertIsTrue(programMemory->GetProgramLength() == 0);
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfLengthIsCorrectForOneLine(){
-    cout << "Test if program length is correct for a one line input" << endl;
+    logger->LogInfoMessage("Test if program length is correct for a one line input");
     ProgramMemory* programMemory = CreateProgramMemory("TEST\n");
     AssertIsTrue(programMemory->GetProgramLength() == 5);
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfLinesCountIsCorrectForEmptyInput(){
-    cout << "Test if lines count is correct for empty input" << endl;
+    logger->LogInfoMessage("Test if lines count is correct for empty input");
     ProgramMemory* programMemory = CreateProgramMemory("");
     AssertIsTrue(programMemory->GetLinesCount() == 0);
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfLinesCountIsCorrectForOneLine(){
-    cout << "Test if lines count is correct for a one line input" << endl;
+    logger->LogInfoMessage("Test if lines count is correct for a one line input");
     ProgramMemory* programMemory = CreateProgramMemory("TEST\n");
     AssertIsTrue(programMemory->GetLinesCount() == 1);
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfLinesMappingIsCorrectForOneLine(){
-    cout << "Test if lines mapping is correct for a one line input" << endl;
-    ProgramMemory* programMemory = CreateProgramMemory("TEST\n");
+    logger->LogInfoMessage("Test if lines mapping is correct for a one line input");
+    ProgramMemory* programMemory = CreateProgramMemory("0 TEST\n");
     string textOnLineZero(programMemory->GetPosition(0));
-    AssertIsTrue(textOnLineZero == "TEST\n");
+    AssertIsTrue(textOnLineZero == "0 TEST\n");
     delete programMemory;
 }
 
 void ProgramMemoryTest::TestIfLinesMappingIsCorrectForTwoLines(){
-    cout << "Test if lines mapping is correct for a two lines input" << endl;
-    ProgramMemory* programMemory = CreateProgramMemory("TEST1\nTEST2\n");
+    logger->LogInfoMessage("Test if lines mapping is correct for a two lines input");
+    ProgramMemory* programMemory = CreateProgramMemory("0 TEST1\n1 TEST2\n");
     string textOnSecondLine(programMemory->GetPosition(1));
-    AssertIsTrue(textOnSecondLine == "TEST2\n");
+    this->logger->LogDebugMessage(textOnSecondLine);
+    AssertIsTrue(textOnSecondLine == "1 TEST2\n");
     delete programMemory;
 }
 
@@ -80,7 +82,7 @@ ProgramMemory* ProgramMemoryTest::CreateProgramMemory(string input){
 }
 
 void ProgramMemoryTest::TestProgramSizeForBigProgramFile(){
-    cout << "Test calculating program size for a big program file" << endl;
+    logger->LogInfoMessage("Test calculating program size for a big program file");
     function<void(ProgramMemory*)> testFunction = [&](ProgramMemory* programMemory){
         AssertIsTrue(programMemory->GetProgramLength() == 5009);
     };
@@ -89,7 +91,7 @@ void ProgramMemoryTest::TestProgramSizeForBigProgramFile(){
 }
 
 void ProgramMemoryTest::TestLinesCountForBigProgramFile(){
-    cout << "Test calculating lines count for a big program file" << endl;
+    logger->LogInfoMessage("Test calculating lines count for a big program file");
     function<void(ProgramMemory*)> testFunction = [&](ProgramMemory* programMemory){
         AssertIsTrue(programMemory->GetLinesCount() == 9);
     };
@@ -106,10 +108,6 @@ void ProgramMemoryTest::TestWithProgramFile(string programFilePath, function<voi
     delete programMemory;
 }
 
-ProgramMemoryTest::ProgramMemoryTest(){
-    
-}
+ProgramMemoryTest::ProgramMemoryTest(Logger* logger) : TestFixture(logger){}
 
-ProgramMemoryTest::~ProgramMemoryTest(){
-
-}
+ProgramMemoryTest::~ProgramMemoryTest(){}
